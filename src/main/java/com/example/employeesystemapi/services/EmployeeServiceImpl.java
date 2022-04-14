@@ -4,6 +4,7 @@ import com.example.employeesystemapi.entity.EmployeeEntity;
 import com.example.employeesystemapi.model.Employee;
 import com.example.employeesystemapi.repository.EmployeeRepository;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,5 +43,27 @@ public class EmployeeServiceImpl implements EmployeeService{
         employeeRepository.delete(employee);
 
         return true;
+    }
+
+    @Override
+    public Employee getEmployeeById(Long id) {
+        EmployeeEntity employeeEntity = employeeRepository.findById(id).get();
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeEntity, employee);
+
+        return employee;
+    }
+
+    @Override
+    public Employee updateEmployee(Long id, Employee employee) {
+        EmployeeEntity employeeEntity = employeeRepository.findById(id).get();
+
+        employeeEntity.setEmailId(employee.getEmailId());
+        employeeEntity.setFirstName(employee.getFirstName());
+        employeeEntity.setLastName(employee.getLastName());
+
+        employeeRepository.save(employeeEntity);
+
+        return employee;
     }
 }
